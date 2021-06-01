@@ -20,12 +20,16 @@ public class Game extends GameEngine {
 	int size = 20;
 	int dir = RIGHT;
 	int speed = 5;
-	Rectangle2D.Double square;
-	Ellipse2D.Double circle;
 	int gravity = 6;
 	int xVel = 0;
 	int yVel = 0;
-	
+
+	int boardWidth;
+	int boardHeight;
+	int numBombs;
+
+	int blockWidth = 50;
+	Board board;
 	
 	//ArrayList<Rectangle2D.Double> circles = new ArrayList<Rectangle2D.Double>();
 
@@ -45,52 +49,44 @@ public class Game extends GameEngine {
 	}
 
 	void init() {
-		circle = new Ellipse2D.Double(0, 0, 50, 50);
-		square = new Rectangle2D.Double(30, 60, 50, 50);
-		
-		// Creates new 16 by 16 blank image
-		BufferedImage cursorImg = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
+//		// Creates new 16 by 16 blank image
+//		BufferedImage cursorImg = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
+//
+//		// Create a new blank cursor.
+//		Cursor blankCursor = Toolkit.getDefaultToolkit().createCustomCursor(cursorImg, new Point(0, 0), "blank cursor");
+//
+//		// Set the blank cursor to the JFrame.
+//		getContentPane().setCursor(blankCursor);
 
-		// Create a new blank cursor.
-		Cursor blankCursor = Toolkit.getDefaultToolkit().createCustomCursor(cursorImg, new Point(0, 0), "blank cursor");
+		boardWidth = 20;
+		boardHeight = 20;
+		numBombs = 30;
 
-		// Set the blank cursor to the JFrame.
-		getContentPane().setCursor(blankCursor);
+		board = new Board(boardWidth, boardHeight, numBombs);
+
 	}
-	
-	boolean canMove(int xSpeed, int ySpeed) {
-		Ellipse2D.Double c = new Ellipse2D.Double(circle.x + xSpeed, circle.y + ySpeed, circle.width, circle.height);
-		return !c.intersects(square);
-	}
+
 
 	void update() {
-		if (input.isKeyDown(KeyEvent.VK_D)) {
-			dir = RIGHT;
+
+		if (input.isKeyDown(KeyEvent.VK_ESCAPE)){
+			System.exit(0);
 		}
-		
-		if (dir == RIGHT && canMove(speed, 0)) {
-			circle.x += speed;
+
+		// If R is pressed, Then Restart
+		if (input.isKeyDown(KeyEvent.VK_R)){
+			restart();
 		}
-		
-		
-		if (input.isKeyDown(KeyEvent.VK_A)) {
-			dir = LEFT;
+
+		if (input.wasClicked()){
+			float mouseX = input.MouseX();
+			float mouseY = input.MouseY();
+
+			board.click(mouseX, mouseY, blockWidth);
+
+			input.resetClicks();
 		}
-		
-		if (dir == LEFT && canMove(-speed, 0)) {
-			circle.x -= speed;
-		}
-		
-		
-		if (input.isKeyDown(KeyEvent.VK_S) && canMove(0, speed)) {
-			circle.y += speed;
-		}
-		if (input.isKeyDown(KeyEvent.VK_W) && canMove(0, -speed)) {
-			circle.y -= speed;
-		}
-		if (input.isKeyDown(KeyEvent.VK_ESCAPE)) {
-			isRunning = false;
-		}
+
 	}
 
 	void draw(Graphics g) {
@@ -99,9 +95,13 @@ public class Game extends GameEngine {
 		g.fillRect(0, 0, windowWidth, windowHeight);
 
 		g.setColor(Color.WHITE);
-		g.drawOval((int) circle.x, (int) circle.y, (int) circle.width, (int) circle.height);
-		g.fillRect((int) square.x, (int) square.y, (int) square.width, (int) square.height);
 
+		board.printGrid();
+		board.draw((Graphics2D) g, blockWidth);
+	}
+
+	void restart(){
+		init();
 	}
 
 }
