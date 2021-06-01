@@ -2,5 +2,9 @@ GameEngine.java
  GameEngine
 InputHandler.java
  InputHandler
+Block.java
+ Block
+Board.java
+ Board
 Game.java
  Game

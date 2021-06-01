@@ -206,8 +206,8 @@ public class Board {
         for (int i = block.getX() - 1; i <= block.getX() + 1; i++){
             for (int j = block.getY() - 1; j <= block.getY() + 1; j++){
 
-                if (i > 0 && i < numRows && j > 0 && j < numCols){
-                    grid[i][j].click();
+                if (i >= 0 && i < numRows && j >= 0 && j < numCols){
+                        click(grid[i][j]);
                 }
 
             }
