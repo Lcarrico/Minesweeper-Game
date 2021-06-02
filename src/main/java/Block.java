@@ -78,7 +78,7 @@ public class Block {
 
         g.drawString(display, (float)rect.getX() +  (float)rect.getWidth()/3, (float)rect.getY() + (float)rect.height - (float)rect.getHeight()/3);
 
-        if (!isClicked()){
+        if (!isClicked()){  
             g.setColor(Color.DARK_GRAY);
 
             rect.width -= 4;

@@ -173,13 +173,15 @@ public class Board {
         }
     }
 
-    public void click(float x, float y, int blockWidth){
+    public Block click(float x, float y, int blockWidth){
         int row = (int)x / blockWidth;
         int col = (int)y / blockWidth;
 
         if (row < numRows && row >= 0 && col < numCols && numCols >= 0){
             click(grid[col][row]);
         }
+
+        return grid[col][row];
 
 
     }
