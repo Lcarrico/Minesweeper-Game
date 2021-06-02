@@ -30,8 +30,9 @@ public class Game extends GameEngine {
 
 	int blockWidth = 50;
 	Board board;
+
+	boolean gameOver;
 	
-	//ArrayList<Rectangle2D.Double> circles = new ArrayList<Rectangle2D.Double>();
 
 	public static void main(String[] args) {
 
@@ -63,6 +64,7 @@ public class Game extends GameEngine {
 		numBombs = 30;
 
 		board = new Board(boardWidth, boardHeight, numBombs);
+		gameOver = false;
 
 	}
 
@@ -78,11 +80,21 @@ public class Game extends GameEngine {
 			restart();
 		}
 
+		if (gameOver){
+			return;
+		}
+
 		if (input.wasClicked()){
 			float mouseX = input.MouseX();
 			float mouseY = input.MouseY();
 
-			board.click(mouseX, mouseY, blockWidth);
+			Block clickedBlock = board.click(mouseX, mouseY, blockWidth);
+
+			if (clickedBlock.isBomb()){
+				gameOver = true;
+				System.out.println("Game Over");
+
+			}
 
 			input.resetClicks();
 		}
@@ -96,7 +108,7 @@ public class Game extends GameEngine {
 
 		g.setColor(Color.WHITE);
 
-		board.printGrid();
+//		board.printGrid();
 		board.draw((Graphics2D) g, blockWidth);
 	}
 
