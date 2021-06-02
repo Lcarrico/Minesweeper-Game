@@ -26,10 +26,15 @@ public class Board {
      */
     private final Block[][] grid;
 
+    private int undiscoveredBlocks;
+
     /** Constructor for Minesweeper */
     public Board(int numRows, int numCols, int numMines) {
         this.numRows = numRows;
         this.numCols = numCols;
+
+        this.undiscoveredBlocks = numRows * numCols - numMines;
+
         grid = new Block[numRows][numCols];
 
         for (int i = 0; i < numRows; i++){
@@ -140,6 +145,10 @@ public class Board {
         }
     }
 
+    public boolean isCleared(){
+        return undiscoveredBlocks == 0;
+    }
+
     public void printGrid() {
         int x = 0;
         int y = 0;
@@ -179,17 +188,32 @@ public class Board {
 
         if (row < numRows && row >= 0 && col < numCols && numCols >= 0){
             click(grid[col][row]);
+            return grid[col][row];
         }
 
-        return grid[col][row];
-
-
+        return null;
     }
 
+    public Block rightClick(float x, float y, int blockWidth){
+        int row = (int)x / blockWidth;
+        int col = (int)y / blockWidth;
 
-    public void click(Block block){
+        if (row < numRows && row >= 0 && col < numCols && numCols >= 0){
+            leftClick(grid[col][row]);
+
+            return grid[col][row];
+        }
+
+        return null;
+    }
+
+    public void leftClick(Block block){
+        block.toggleStatus();
+    }
+
+    public boolean click(Block block){
         if (block.isClicked())
-            return;
+            return false;
 
         block.click();
 
@@ -201,6 +225,9 @@ public class Board {
             reveal();
         }
 
+        this.undiscoveredBlocks--;
+
+        return true;
 
     }
 
@@ -243,5 +270,19 @@ public class Board {
         return this.grid.clone();
     }
 
+    public int getNumRows() {
+        return numRows;
+    }
 
+    public int getNumCols() {
+        return numCols;
+    }
+
+    public int getNumMines() {
+        return numMines;
+    }
+
+    public int getUndiscoveredBlocks() {
+        return undiscoveredBlocks;
+    }
 }
