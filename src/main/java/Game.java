@@ -17,6 +17,8 @@ public class Game extends GameEngine {
 	int gravity = 6;
 	int xVel = 0;
 	int yVel = 0;
+	int translateBoardX = 0;
+	int translateBoardY = 0;
 
 	int boardWidth;
 	int boardHeight;
@@ -31,10 +33,14 @@ public class Game extends GameEngine {
 	public static void main(String[] args) {
 		Game g = new Game();
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		windowWidth = (int) screenSize.getWidth();
-		windowHeight = (int) screenSize.getHeight();
-		g.setExtendedState(MAXIMIZED_BOTH);
-		g.setUndecorated(true);
+//		windowWidth = (int) screenSize.getWidth();
+//		windowHeight = (int) screenSize.getHeight();
+
+		windowWidth = 1200;
+		windowHeight = 800;
+
+//		g.setExtendedState(MAXIMIZED_BOTH);
+//		g.setUndecorated(true);
 		g.setVisible(true);
 		g.init();
 		g.run();
@@ -51,9 +57,12 @@ public class Game extends GameEngine {
 //		// Set the blank cursor to the JFrame.
 //		getContentPane().setCursor(blankCursor);
 
+		translateBoardX = 120;
+		translateBoardY = 180;
+
 		boardWidth = 10;
 		boardHeight = 10;
-		numBombs = 20;
+		numBombs = 5;
 
 		board = new Board(boardWidth, boardHeight, numBombs);
 		gameOver = false;
@@ -78,15 +87,14 @@ public class Game extends GameEngine {
 
 		if (input.wasClicked()){
 
-			float mouseX = input.MouseX();
-			float mouseY = input.MouseY();
+			float mouseX = input.MouseX() - insets.left - translateBoardX;
+			float mouseY = input.MouseY() - insets.top - translateBoardY;
 
 			if (input.wasLeftClick()){
 				Block clickedBlock = board.click(mouseX, mouseY, blockWidth);
 
 				if (clickedBlock != null && clickedBlock.isBomb()){
 					gameOver = true;
-					System.out.println("Game Over");
 
 				}
 			}
@@ -109,22 +117,30 @@ public class Game extends GameEngine {
 
 
 //		board.printGrid();
+		g.setColor(Color.WHITE);
+		g.setFont(new Font("TimesRoman", Font.PLAIN, 128));
+		g.drawString("Minesweeper", windowWidth*8/32, windowHeight*5/32);
+
+		g.translate(translateBoardX, translateBoardY);
 		board.draw((Graphics2D) g, blockWidth);
+		g.translate(-translateBoardX, -translateBoardY);
 
 		if (board.isCleared() && !gameOver){
-			g.setFont(new Font("TimesRoman", Font.PLAIN, 128));
+			g.setFont(new Font("TimesRoman", Font.PLAIN, 84));
 			g.setColor(Color.WHITE);
-			g.drawString("Game Won!", windowWidth*5/8, windowHeight/3);
+			g.drawString("Game Won!", windowWidth*18/32, windowHeight*18/32);
+
 		}
 		else if (gameOver){
-			g.setFont(new Font("TimesRoman", Font.PLAIN, 128));
+			g.setFont(new Font("TimesRoman", Font.PLAIN, 84));
 			g.setColor(Color.WHITE);
-			g.drawString("Game Over", windowWidth*5/8, windowHeight/2);
+			g.drawString("Game Over", windowWidth*18/32, windowHeight*18/32);
+
 		}
 		else{
-			g.setColor(Color.WHITE);
+			g.setColor(Color.LIGHT_GRAY);
 			g.setFont(new Font("TimesRoman", Font.PLAIN, 32));
-			g.drawString("Number of remaining Mines: " + String.valueOf(board.getNumMines() - board.getNumFlags()), windowWidth*5/8, windowHeight/2);
+			g.drawString("Number of remaining Mines: " + String.valueOf(board.getNumMines() - board.getNumFlags()), windowWidth*18/32, windowHeight*18/32);
 		}
 	}
 

@@ -30,6 +30,7 @@ public class GameEngine extends JFrame {
 
 			Graphics g = getGraphics();
 			draw(backBuffer.getGraphics());
+//			g.drawImage(backBuffer, 0, 0, this);
 			g.drawImage(backBuffer, insets.left, insets.top, this);
 
 			// delay for each frame - time it took for one frame
