@@ -59,13 +59,12 @@ public class Board {
         while(mines != 0){
             int x = random.nextInt(numRows);
             int y = random.nextInt(numCols);
-
+            
             // make sure a mine isn't already there
-            while(grid[x][y].getValue() == 100){
+            while(grid[x][y].getValue() >= 100){
                 x = random.nextInt(numRows);
                 y = random.nextInt(numCols);
             }
-
 
             // cover top left corner case
             if (x == 0 && y == 0) {

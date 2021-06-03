@@ -59,9 +59,9 @@ public class Game extends GameEngine {
 //		// Set the blank cursor to the JFrame.
 //		getContentPane().setCursor(blankCursor);
 
-		boardWidth = 20;
-		boardHeight = 20;
-		numBombs = 30;
+		boardWidth = 10;
+		boardHeight = 10;
+		numBombs = 80;
 
 		board = new Board(boardWidth, boardHeight, numBombs);
 		gameOver = false;
