@@ -32,10 +32,9 @@ public class Game extends GameEngine {
 	Board board;
 
 	boolean gameOver;
-	
+	boolean started;
 
 	public static void main(String[] args) {
-
 		Game g = new Game();
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		windowWidth = (int) screenSize.getWidth();
@@ -46,7 +45,6 @@ public class Game extends GameEngine {
 		g.init();
 		g.run();
 		System.exit(0);
-
 	}
 
 	void init() {
@@ -59,13 +57,14 @@ public class Game extends GameEngine {
 //		// Set the blank cursor to the JFrame.
 //		getContentPane().setCursor(blankCursor);
 
-		boardWidth = 20;
-		boardHeight = 20;
-		numBombs = 30;
+		boardWidth = 10;
+		boardHeight = 10;
+		numBombs = 20;
 
 		board = new Board(boardWidth, boardHeight, numBombs);
 		gameOver = false;
 
+		started = false;
 	}
 
 
@@ -95,7 +94,7 @@ public class Game extends GameEngine {
 				System.out.println("Game Over");
 
 			}
-
+			started = true;
 			input.resetClicks();
 		}
 
