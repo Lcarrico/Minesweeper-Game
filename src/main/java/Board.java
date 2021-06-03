@@ -14,7 +14,7 @@ public class Board {
     /** The length of the grid */
     private final int numRows;
     /**
-     * The height of t he grid
+     * The height of the grid
      */
     private final int numCols;
     /**
@@ -25,6 +25,10 @@ public class Board {
      * The entire grid
      */
     private final Block[][] grid;
+    /**
+     * If first move has been made yet
+     */
+    private boolean started;
 
     private int undiscoveredBlocks;
 
@@ -34,20 +38,22 @@ public class Board {
     public Board(int numRows, int numCols, int numMines) {
         this.numRows = numRows;
         this.numCols = numCols;
-
+        this.numMines = numMines;
+        this.started = false;
         this.undiscoveredBlocks = numRows * numCols - numMines;
         this.numFlags = 0;
 
         grid = new Block[numRows][numCols];
+        generateBoard(numRows, numCols);
+    }
 
+    private void generateBoard(int numRows, int numCols){
         for (int i = 0; i < numRows; i++){
             for (int j = 0; j < numCols; j++){
                 grid[j][i] = new Block(0, j, i);
             }
         }
-
-        this.numMines = numMines;
-        make_grid();
+        generateMines();
     }
 
     /** Make the grid and put the mines of the grid. A value of 100 will signify a mine.
@@ -59,7 +65,7 @@ public class Board {
      *  |  (x-1)(y+1)  |  (x)(y+1)  |  (x+1)(y+1)  |
      *  --------------------------------------------
      */
-    private void make_grid() {
+    private void generateMines() {
         int mines = numMines;
         Random random = new Random();
 
@@ -170,16 +176,12 @@ public class Board {
     }
 
     public void draw(Graphics2D g, int blockWidth){
-
         g.setFont(new Font("TimesRoman", Font.PLAIN, 32));
-
         Rectangle2D.Double tempBlock;
         for (int i = 0; i < numRows; i++){
             for (int j = 0; j < numCols; j++){
-
                 tempBlock = new Rectangle2D.Double(j * blockWidth, i*blockWidth, blockWidth, blockWidth);
                 grid[i][j].draw(g, tempBlock);
-
             }
         }
     }
@@ -187,6 +189,16 @@ public class Board {
     public Block click(float x, float y, int blockWidth){
         int row = (int)x / blockWidth;
         int col = (int)y / blockWidth;
+
+        if (!started){
+            while (grid[col][row].getValue() != 0){
+                generateBoard(numRows, numCols);
+            }
+            started = true;
+        }
+        if (grid[col][row].status == Block.Status.FLAG){
+            return null;
+        }
 
         if (row < numRows && row >= 0 && col < numCols && numCols >= 0){
 
@@ -198,7 +210,6 @@ public class Board {
 
             return grid[col][row];
         }
-
         return null;
     }
 
@@ -245,7 +256,6 @@ public class Board {
         this.undiscoveredBlocks--;
 
         return true;
-
     }
 
     public void revealNear(Block block){
@@ -255,10 +265,8 @@ public class Board {
                 if (i >= 0 && i < numRows && j >= 0 && j < numCols){
                         click(grid[i][j]);
                 }
-
             }
         }
-
     }
 
     public void reveal(){
@@ -269,19 +277,6 @@ public class Board {
         }
     }
 
-
-    /**
-     * Main method for the Minesweeper game
-     * @param args command line arguments
-     */
-    public static void main(String[] args){
-        Random rand = new Random();
-        int randBombs = 1 + rand.nextInt(4);
-        Board board = new Board(5, 5, randBombs);
-
-        board.make_grid();
-        board.printGrid();
-    }
 
     public Block[][] getGrid(){
         return this.grid.clone();
