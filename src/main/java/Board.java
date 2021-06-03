@@ -190,6 +190,9 @@ public class Board {
         int row = (int)x / blockWidth;
         int col = (int)y / blockWidth;
 
+        if (!(row < numRows && row >= 0 && col < numCols && numCols >= 0)){
+            return null;
+        }
         if (!started){
             while (grid[col][row].getValue() != 0){
                 generateBoard(numRows, numCols);
@@ -200,17 +203,9 @@ public class Board {
             return null;
         }
 
-        if (row < numRows && row >= 0 && col < numCols && numCols >= 0){
+        click(grid[col][row]);
 
-            if (grid[col][row].status == Block.Status.FLAG){
-                return null;
-            }
-
-            click(grid[col][row]);
-
-            return grid[col][row];
-        }
-        return null;
+        return grid[col][row];
     }
 
     public int getNumFlags() {
