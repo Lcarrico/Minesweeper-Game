@@ -56,7 +56,7 @@ public class Game extends GameEngine {
 		boardWidth = 10;
 		boardHeight = 10;
 
-		numBombs = 80;
+		numBombs = 20;
 
 		board = new Board(boardWidth, boardHeight, numBombs);
 		gameOver = false;
