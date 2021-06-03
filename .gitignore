@@ -4,6 +4,6 @@
 *.xml
 *.txt
 
-.gradle
-.idea
-build
+.gradle/*
+.idea/*
+build/*
