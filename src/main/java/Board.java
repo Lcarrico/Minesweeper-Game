@@ -67,13 +67,12 @@ public class Board {
         while(mines != 0){
             int x = random.nextInt(numRows);
             int y = random.nextInt(numCols);
-
+            
             // make sure a mine isn't already there
-            while(grid[x][y].getValue() == 100){ // and bomb location does not does mouseX and mouseY
+            while(grid[x][y].getValue() >= 100){
                 x = random.nextInt(numRows);
                 y = random.nextInt(numCols);
             }
-
 
             // cover top left corner case
             if (x == 0 && y == 0) {
@@ -189,11 +188,12 @@ public class Board {
         int row = (int)x / blockWidth;
         int col = (int)y / blockWidth;
 
-        if (grid[col][row].status == Block.Status.FLAG){
-            return null;
-        }
-
         if (row < numRows && row >= 0 && col < numCols && numCols >= 0){
+
+            if (grid[col][row].status == Block.Status.FLAG){
+                return null;
+            }
+
             click(grid[col][row]);
 
             return grid[col][row];
