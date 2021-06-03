@@ -8,6 +8,9 @@ public class InputHandler implements KeyListener, MouseListener, MouseMotionList
 	private boolean keys[] = new boolean[256];
 	private boolean mousePressed = false;
 	private boolean mouseInScreen = false;
+	private boolean leftClick = false;
+	private boolean rightClick = false;
+
 	private int clicks = 0;
 	private int mouseX = 0;
 	private int mouseY = 0;
@@ -42,7 +45,17 @@ public class InputHandler implements KeyListener, MouseListener, MouseMotionList
 		return false;
 	}
 
+	public boolean wasLeftClick(){
+		return leftClick;
+	}
+
+	public boolean wasRightClick(){
+		return rightClick;
+	}
+
 	public void resetClicks() {
+		leftClick = false;
+		rightClick = false;
 		clicks = 0;
 	}
 
@@ -95,6 +108,11 @@ public class InputHandler implements KeyListener, MouseListener, MouseMotionList
 	}
 
 	public void mouseClicked(MouseEvent e) {
+		switch (e.getButton()) {
+			case MouseEvent.BUTTON1 -> leftClick = true;
+			case MouseEvent.BUTTON3 -> rightClick = true;
+		}
+
 		clicks += e.getClickCount();
 	}
 

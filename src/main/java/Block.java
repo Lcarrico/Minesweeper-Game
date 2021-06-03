@@ -7,6 +7,11 @@ public class Block {
     private boolean clicked;
     int x;
     int y;
+    Status status;
+
+    enum Status {
+        BLANK, FLAG, QUESTION
+    }
 
     public boolean isBlank(){
         return value == 0;
@@ -21,6 +26,7 @@ public class Block {
         this.clicked = false;
         this.x = x;
         this.y = y;
+        status = Status.BLANK;
     }
 
     public int getX() {
@@ -37,6 +43,14 @@ public class Block {
 
     public void setY(int y) {
         this.y = y;
+    }
+
+    public void toggleStatus(){
+        switch (status){
+            case BLANK -> status = Status.FLAG;
+            case FLAG -> status = Status.QUESTION;
+            case QUESTION -> status = Status.BLANK;
+         }
     }
 
     public int getValue() {
@@ -78,8 +92,12 @@ public class Block {
 
         g.drawString(display, (float)rect.getX() +  (float)rect.getWidth()/3, (float)rect.getY() + (float)rect.height - (float)rect.getHeight()/3);
 
-        if (!isClicked()){  
-            g.setColor(Color.DARK_GRAY);
+        if (!isClicked()){
+            switch (status){
+                case FLAG -> g.setColor(Color.RED);
+                case QUESTION -> g.setColor(Color.YELLOW);
+                default -> g.setColor(Color.DARK_GRAY);
+            }
 
             rect.width -= 4;
             rect.height -= 4;
