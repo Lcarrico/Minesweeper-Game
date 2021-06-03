@@ -116,8 +116,7 @@ public class Game extends GameEngine {
 			g.setColor(Color.WHITE);
 			g.drawString("Game Won!", windowWidth*5/8, windowHeight/3);
 		}
-
-		if (gameOver){
+		else if (gameOver){
 			g.setFont(new Font("TimesRoman", Font.PLAIN, 128));
 			g.setColor(Color.WHITE);
 			g.drawString("Game Over", windowWidth*5/8, windowHeight/2);

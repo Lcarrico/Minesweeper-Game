@@ -204,6 +204,11 @@ public class Board {
         }
 
         if (row < numRows && row >= 0 && col < numCols && numCols >= 0){
+
+            if (grid[col][row].status == Block.Status.FLAG){
+                return null;
+            }
+
             click(grid[col][row]);
 
             return grid[col][row];
