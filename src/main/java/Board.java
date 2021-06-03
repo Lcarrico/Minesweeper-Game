@@ -189,11 +189,12 @@ public class Board {
         int row = (int)x / blockWidth;
         int col = (int)y / blockWidth;
 
-        if (grid[col][row].status == Block.Status.FLAG){
-            return null;
-        }
-
         if (row < numRows && row >= 0 && col < numCols && numCols >= 0){
+
+            if (grid[col][row].status == Block.Status.FLAG){
+                return null;
+            }
+
             click(grid[col][row]);
 
             return grid[col][row];
