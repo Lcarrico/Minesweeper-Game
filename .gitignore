@@ -1,6 +1,7 @@
 .gradle/**
 .idea/**
 build/**
+gradle/**
 
 *.bin
 *.lock
@@ -8,3 +9,7 @@ build/**
 *.xml
 *.txt
 
+build.gradle
+gradlew
+gradlew.bat
+settings.gradle
