@@ -28,12 +28,15 @@ public class Board {
 
     private int undiscoveredBlocks;
 
+    private int numFlags;
+
     /** Constructor for Minesweeper */
     public Board(int numRows, int numCols, int numMines) {
         this.numRows = numRows;
         this.numCols = numCols;
 
         this.undiscoveredBlocks = numRows * numCols - numMines;
+        this.numFlags = 0;
 
         grid = new Block[numRows][numCols];
 
@@ -66,7 +69,7 @@ public class Board {
             int y = random.nextInt(numCols);
 
             // make sure a mine isn't already there
-            while(grid[x][y].getValue() == 100){
+            while(grid[x][y].getValue() == 100){ // and bomb location does not does mouseX and mouseY
                 x = random.nextInt(numRows);
                 y = random.nextInt(numCols);
             }
@@ -186,12 +189,21 @@ public class Board {
         int row = (int)x / blockWidth;
         int col = (int)y / blockWidth;
 
+        if (grid[col][row].status == Block.Status.FLAG){
+            return null;
+        }
+
         if (row < numRows && row >= 0 && col < numCols && numCols >= 0){
             click(grid[col][row]);
+
             return grid[col][row];
         }
 
         return null;
+    }
+
+    public int getNumFlags() {
+        return numFlags;
     }
 
     public Block rightClick(float x, float y, int blockWidth){
@@ -199,7 +211,7 @@ public class Board {
         int col = (int)y / blockWidth;
 
         if (row < numRows && row >= 0 && col < numCols && numCols >= 0){
-            leftClick(grid[col][row]);
+            rightClick(grid[col][row]);
 
             return grid[col][row];
         }
@@ -207,8 +219,13 @@ public class Board {
         return null;
     }
 
-    public void leftClick(Block block){
+    public void rightClick(Block block){
+        switch (block.status){
+            case BLANK -> this.numFlags++;
+            case FLAG -> this.numFlags--;
+        }
         block.toggleStatus();
+
     }
 
     public boolean click(Block block){

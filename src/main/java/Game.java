@@ -107,7 +107,7 @@ public class Game extends GameEngine {
 		g.setColor(Color.BLACK);
 		g.fillRect(0, 0, windowWidth, windowHeight);
 
-		g.setColor(Color.WHITE);
+
 
 //		board.printGrid();
 		board.draw((Graphics2D) g, blockWidth);
@@ -115,14 +115,18 @@ public class Game extends GameEngine {
 		if (board.isCleared() && !gameOver){
 			g.setFont(new Font("TimesRoman", Font.PLAIN, 128));
 			g.setColor(Color.WHITE);
-			g.drawString("Game Won!", windowWidth*5/8, windowHeight/2);
+			g.drawString("Game Won!", windowWidth*5/8, windowHeight/3);
 		}
 
 		if (gameOver){
 			g.setFont(new Font("TimesRoman", Font.PLAIN, 128));
 			g.setColor(Color.WHITE);
 			g.drawString("Game Over", windowWidth*5/8, windowHeight/2);
-
+		}
+		else{
+			g.setColor(Color.WHITE);
+			g.setFont(new Font("TimesRoman", Font.PLAIN, 32));
+			g.drawString("Number of remaining Mines: " + String.valueOf(board.getNumMines() - board.getNumFlags()), windowWidth*5/8, windowHeight/2);
 		}
 	}
 
