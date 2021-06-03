@@ -1,10 +1,4 @@
-import java.awt.Color;
-import java.awt.Cursor;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Point;
-import java.awt.Toolkit;
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
@@ -69,7 +63,6 @@ public class Game extends GameEngine {
 
 
 	void update() {
-
 		if (input.isKeyDown(KeyEvent.VK_ESCAPE)){
 			System.exit(0);
 		}
@@ -79,20 +72,28 @@ public class Game extends GameEngine {
 			restart();
 		}
 
-		if (gameOver){
+		if (gameOver || board.isCleared()){
 			return;
 		}
 
 		if (input.wasClicked()){
+
 			float mouseX = input.MouseX();
 			float mouseY = input.MouseY();
 
-			Block clickedBlock = board.click(mouseX, mouseY, blockWidth);
+			if (input.wasLeftClick()){
+				Block clickedBlock = board.click(mouseX, mouseY, blockWidth);
 
-			if (clickedBlock.isBomb()){
-				gameOver = true;
-				System.out.println("Game Over");
+				if (clickedBlock != null && clickedBlock.isBomb()){
+					gameOver = true;
+					System.out.println("Game Over");
 
+				}
+			}
+
+			if (input.wasRightClick()){
+				System.out.println("Right was clicked.");
+				board.rightClick(mouseX, mouseY, blockWidth);
 			}
 			started = true;
 			input.resetClicks();
@@ -105,10 +106,27 @@ public class Game extends GameEngine {
 		g.setColor(Color.BLACK);
 		g.fillRect(0, 0, windowWidth, windowHeight);
 
-		g.setColor(Color.WHITE);
+
 
 //		board.printGrid();
 		board.draw((Graphics2D) g, blockWidth);
+
+		if (board.isCleared() && !gameOver){
+			g.setFont(new Font("TimesRoman", Font.PLAIN, 128));
+			g.setColor(Color.WHITE);
+			g.drawString("Game Won!", windowWidth*5/8, windowHeight/3);
+		}
+
+		if (gameOver){
+			g.setFont(new Font("TimesRoman", Font.PLAIN, 128));
+			g.setColor(Color.WHITE);
+			g.drawString("Game Over", windowWidth*5/8, windowHeight/2);
+		}
+		else{
+			g.setColor(Color.WHITE);
+			g.setFont(new Font("TimesRoman", Font.PLAIN, 32));
+			g.drawString("Number of remaining Mines: " + String.valueOf(board.getNumMines() - board.getNumFlags()), windowWidth*5/8, windowHeight/2);
+		}
 	}
 
 	void restart(){

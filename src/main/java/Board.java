@@ -30,12 +30,19 @@ public class Board {
      */
     private boolean started;
 
+    private int undiscoveredBlocks;
+
+    private int numFlags;
+
     /** Constructor for Minesweeper */
     public Board(int numRows, int numCols, int numMines) {
         this.numRows = numRows;
         this.numCols = numCols;
         this.numMines = numMines;
         this.started = false;
+        this.undiscoveredBlocks = numRows * numCols - numMines;
+        this.numFlags = 0;
+
         grid = new Block[numRows][numCols];
         generateBoard(numRows, numCols);
     }
@@ -68,7 +75,7 @@ public class Board {
             int y = random.nextInt(numCols);
 
             // make sure a mine isn't already there
-            while(grid[x][y].getValue() == 100){
+            while(grid[x][y].getValue() == 100){ // and bomb location does not does mouseX and mouseY
                 x = random.nextInt(numRows);
                 y = random.nextInt(numCols);
             }
@@ -147,6 +154,28 @@ public class Board {
         }
     }
 
+    public boolean isCleared(){
+        return undiscoveredBlocks == 0;
+    }
+
+    public void printGrid() {
+        int x = 0;
+        int y = 0;
+        String row = "";
+        System.out.println("----------------------------------------");
+        while (x < numRows) {
+            while (y < numCols) {
+                row += "|\t" + grid[x][y].getValue() + "\t";
+                y++;
+            }
+            System.out.println(row + "|");
+            System.out.println("----------------------------------------");
+            row = "";
+            x++;
+            y = 0;
+        }
+    }
+
     public void draw(Graphics2D g, int blockWidth){
         g.setFont(new Font("TimesRoman", Font.PLAIN, 32));
         Rectangle2D.Double tempBlock;
@@ -171,16 +200,47 @@ public class Board {
             System.out.println("starting!");
             started = true;
         }
-        if (row < numRows && row >= 0 && col < numCols && numCols >= 0){
-            click(grid[col][row]);
+        if (grid[col][row].status == Block.Status.FLAG){
+            return null;
         }
 
-        return grid[col][row];
+        if (row < numRows && row >= 0 && col < numCols && numCols >= 0){
+            click(grid[col][row]);
+
+            return grid[col][row];
+        }
+        return null;
     }
 
-    public void click(Block block){
+    public int getNumFlags() {
+        return numFlags;
+    }
+
+    public Block rightClick(float x, float y, int blockWidth){
+        int row = (int)x / blockWidth;
+        int col = (int)y / blockWidth;
+
+        if (row < numRows && row >= 0 && col < numCols && numCols >= 0){
+            rightClick(grid[col][row]);
+
+            return grid[col][row];
+        }
+
+        return null;
+    }
+
+    public void rightClick(Block block){
+        switch (block.status){
+            case BLANK -> this.numFlags++;
+            case FLAG -> this.numFlags--;
+        }
+        block.toggleStatus();
+
+    }
+
+    public boolean click(Block block){
         if (block.isClicked())
-            return;
+            return false;
 
         block.click();
 
@@ -191,6 +251,10 @@ public class Board {
         if (block.isBomb()){
             reveal();
         }
+
+        this.undiscoveredBlocks--;
+
+        return true;
     }
 
     public void revealNear(Block block){
@@ -217,4 +281,19 @@ public class Board {
         return this.grid.clone();
     }
 
+    public int getNumRows() {
+        return numRows;
+    }
+
+    public int getNumCols() {
+        return numCols;
+    }
+
+    public int getNumMines() {
+        return numMines;
+    }
+
+    public int getUndiscoveredBlocks() {
+        return undiscoveredBlocks;
+    }
 }
