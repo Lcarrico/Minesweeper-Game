@@ -1,15 +1,9 @@
 .gradle/**
 .idea/**
 build/**
-gradle/**
 
 *.bin
 *.lock
 *.class
 *.xml
 *.txt
-
-build.gradle
-gradlew
-gradlew.bat
-settings.gradle
