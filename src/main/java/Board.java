@@ -191,10 +191,10 @@ public class Board {
         int col = (int)y / blockWidth;
 
         if (!started){
-            System.out.println(grid[row][col].getValue());
-            while (grid[row][col].getValue() != 0){
+            System.out.println(grid[col][row].getValue());
+            while (grid[col][row].getValue() != 0){
                 generateBoard(numRows, numCols);
-                System.out.println(grid[row][col].getValue());
+                System.out.println(grid[col][row].getValue());
             }
             System.out.println("starting!");
             started = true;
